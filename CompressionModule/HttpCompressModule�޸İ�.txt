@@ -1,0 +1,3 @@
+原模块主页http://www.codeproject.com/KB/aspnet/httpcompression.aspx
+
+修复了几处安全错误

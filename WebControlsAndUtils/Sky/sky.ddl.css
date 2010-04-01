@@ -1,0 +1,42 @@
+.sky__ddl_textboxcontainer {
+}
+.sky__ddl_textboxcontainer input{border-color:#7F9DB9;line-height:1.5em;
+border-style:solid none solid solid;
+border-width:1px 0 1px 1px;
+font-size:13px;
+height:21px;
+margin:0;
+padding:1px 0 0 5px;
+}
+.sky__ddl_buttoncontainer {
+}
+.sky__ddl_buttoncontainer button{
+background-image:url(<%=WebResource("Sky.WebControls.sky.ddl.arrow.gif")%>);
+background-repeat:no-repeat;
+border-color:buttonface;
+background-position:left top;
+border:0 none;
+height:21px;
+margin:0;
+padding:0;
+width:21px;
+}
+.sky__ddl_itemlist {
+background-color:window;
+border:1px solid buttonshadow;
+color:windowtext;
+cursor:default;
+list-style-type:none;
+display:none;
+margin:0;
+padding:0;
+text-align:left;
+min-width:200px;
+width:200px;
+}
+.sky__ddl_itemlist li {
+padding:0 3px 0 2px;
+white-space:nowrap;
+
+}
+.sky__ddl_itemlist li.highlight{background-color:highlight;color:highlighttext}

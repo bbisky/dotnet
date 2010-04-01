@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>ComboBox.html</title>
+    <style type="text/css">
+        ul{ border:1px solid buttonshadow; width:200px; list-style:none; display:none; margin:0; padding:0;
+             overflow-x:hidden; overflow-y:auto;
+        }
+        li.highlight{background-color:highlight;
+color:highlighttext}
+        .dropdown_tbx{border-color:#7F9DB9;
+border-style:solid none solid solid;
+border-width:1px 0 1px 1px;
+font-size:13px;
+height:18px;
+margin:0;
+padding:1px 0 0 5px;}
+        .dropdown_btn{background-image:url(windows-arrow.gif);
+background-position:left top;
+border:0 none;
+height:21px;
+margin:0;
+padding:0;
+width:21px;}
+    </style>
+    
+ <script language="javascript">
+
+ function SkyDropDownList(){    
+     this.list = null;
+     this.children = null;
+     this.textbox = null;
+     this.selectedIndex = -1;
+ };    
+   
+    
+     SkyDropDownList.prototype.hidelist = function (){
+        this.list.style.display="none";
+     };
+      
+      
+        SkyDropDownList.prototype.hilightListItem = function(index){
+           // var childNodes = document.getElementById("cb_list").children;
+            var childLength = this.children.length;
+            //dishilight
+            if(this.selectedIndex > -1 && this.selectedIndex< childLength){
+                this.children[this.selectedIndex].className = "";
+            }            
+            this.selectedIndex = index>=-1? index : -1;  
+            if(this.selectedIndex > -1 && this.selectedIndex< childLength){
+            var item = this.children[this.selectedIndex];             
+             item.className="highlight";                
+            }            
+        };
+                
+        SkyDropDownList.prototype.showList = function(e){
+           var h = e.offsetHeight;
+            var x = e.offsetLeft;
+              var y = e.offsetTop;
+              while(e = e.offsetParent){
+                x += e.offsetLeft;
+                y += e.offsetTop;
+              }
+            this.list.style.left = x +"px";
+            this.list.style.top = y + h + "px";
+            this.list.style.position = "absolute";
+            this.list.style.display = "block";
+        };
+       
+        
+        SkyDropDownList.prototype.keydown = function(e){
+        if(!e&&window.event)
+            e=window.event;  
+            if(e.keyCode==40){
+                this.hilightListItem(this.selectedIndex+1);
+                return false
+            }
+            else if(e.keyCode==38){
+                this.hilightListItem(this.selectedIndex-1);
+                return false
+            }
+        };
+        
+        var skyddl = new SkyDropDownList();
+        document.onkeydown =skyddl.keydown;
+ </script>
+</head>
+<body>
+
+<input type="text" class="dropdown_tbx" onfocus="skyddl.showList(this);" id="cb_txt" />
+<input class="dropdown_btn" onclick="skyddl.showList(document.getElementById('cb_txt'));" type="button" />
+
+<ul id="cb_list">
+<li>Alfa</li>
+<li>Alpha</li>
+<li>Bissotwo</li>
+<li>Bravo</li>
+<li>Charlie</li>
+</ul>
+<input type="button"  onclick="alert(skyddl.selectedIndex);" value="当前ID" />
+    <script language="javascript">    
+    skyddl.list = document.getElementById("cb_list");
+    skyddl.children = skyddl.list.children;
+    skyddl.textbox = document.getElementById("cb_txt");
+    //alert(childNodes[0].innerHTML);
+     for(var i=0;i<skyddl.children.length;i++)
+    {
+        var item = skyddl.children[i];
+        item.rel = i;       
+        item.onmouseover = function(i){skyddl.hilightListItem(this.rel);};
+        item.onmouseout = function(){this.className="";};
+        item.onclick = function(){skyddl.textbox.value = this.innerHTML; skyddl.textbox.rel= this.rel; skyddl.hidelist();};
+    }
+    </script>
+</body>
+</html>

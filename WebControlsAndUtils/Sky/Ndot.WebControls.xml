@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Sky.WebControls</name>
+    </assembly>
+    <members>
+        <member name="T:Sky.WebControls.DisplayType">
+            <summary>
+            显示方式
+            </summary>
+        </member>
+        <member name="F:Sky.WebControls.DisplayType.Block">
+            <summary>
+            div
+            </summary>
+        </member>
+        <member name="F:Sky.WebControls.DisplayType.Inline">
+            <summary>
+            span
+            </summary>
+        </member>
+        <member name="T:Sky.WebControls.Pager">
+            <summary>
+            分页控件
+            writer by:Denghb
+            date:2006-7-26
+            </summary>
+        </member>
+        <member name="T:Sky.WebControls.IPager">
+            <summary>
+            IPager 的摘要说明。
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.IPager.PageSize">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.IPager.ItemCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.IPager.PageIndex">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Sky.WebControls.Pager.#ctor">
+            <summary>
+            pager
+            </summary>
+        </member>
+        <member name="M:Sky.WebControls.Pager.CalcPageCount(System.Int32,System.Int32)">
+            <summary>
+            计算页数
+            </summary>
+            <param name="pageSize"></param>
+            <param name="itemCount"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sky.WebControls.Pager.RenderLink(System.Int32)">
+            <summary>
+            一般链接
+            </summary>
+            <param name="linkIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sky.WebControls.Pager.RenderPrevLink(System.Int32)">
+            <summary>
+            上一页链接
+            </summary>
+            <param name="PageIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sky.WebControls.Pager.RenderNextLink(System.Int32)">
+            <summary>
+            下一页链接
+            </summary>
+            <param name="_pageIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Sky.WebControls.Pager.RenderLocationStr">
+            <summary>
+            指示当前位置链接
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sky.WebControls.Pager.RenderStatStr">
+            <summary>
+            统计信息链接
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sky.WebControls.Pager.RenderScript(System.Web.UI.HtmlTextWriter,System.String)">
+            <summary>
+            写入脚本至页面
+            </summary>
+            <param name="writer"></param>
+            <param name="script"></param>
+        </member>
+        <member name="M:Sky.WebControls.Pager.RenderDropDownList(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            下拉跳转菜单
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Sky.WebControls.Pager.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            Render
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="P:Sky.WebControls.Pager.DisplayMode">
+            <summary>
+            显示方式,Block 或Inline
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.CssClass">
+            <summary>
+            Css类
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.ItemCount">
+            <summary>
+            总记录数
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.PageIndex">
+            <summary>
+            当前页码
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.PageSize">
+            <summary>
+            页面大小
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.Spacer">
+            <summary>
+            默认空格
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.UrlFormat">
+            <summary>
+            链接格式,即翻页时跳转的地址格式
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.LinkFormat">
+            <summary>
+            链接格式
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.PrevText">
+            <summary>
+            "上一页"文字
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.NextText">
+            <summary>
+            "下一页"文字
+            </summary>
+        </member>
+        <member name="P:Sky.WebControls.Pager.PageCount">
+            <summary>
+            页面总数
+            </summary>
+        </member>
+        <member name="T:Sky.WebControls.PagerDesigner">
+            <summary>
+            PagerDesigner
+            </summary>
+        </member>
+        <member name="M:Sky.WebControls.PagerDesigner.GetDesignTimeHtml">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Sky.WebControls.PagerDesigner.Initialize(System.ComponentModel.IComponent)">
+            <summary>
+            Initialize
+            </summary>
+            <param name="component"></param>
+        </member>
+    </members>
+</doc>

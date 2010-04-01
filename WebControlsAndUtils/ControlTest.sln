@@ -1,0 +1,69 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "http://localhost/ControlTest/", "http://localhost/ControlTest", "{392CAE4A-3657-40DE-94DC-D2440488CE7D}"
+	ProjectSection(WebsiteProperties) = preProject
+		ProjectReferences = "{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}|Sky.WebControls.dll;{E420E8C0-643B-4273-8FD8-11DF34F3692D}|Sky.Excel.dll;"
+		Debug.AspNetCompiler.VirtualPath = "/ControlTest"
+		Debug.AspNetCompiler.PhysicalPath = "ControlTest\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\ControlTest\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/ControlTest"
+		Release.AspNetCompiler.PhysicalPath = "ControlTest\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\ControlTest\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "ControlTest\"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sky.WebControls", "Sky\Sky.WebControls.csproj", "{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sky.Excel", "Sky.Excel\Sky.Excel.csproj", "{E420E8C0-643B-4273-8FD8-11DF34F3692D}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{392CAE4A-3657-40DE-94DC-D2440488CE7D}.Debug|Any CPU.ActiveCfg = Debug|.NET
+		{392CAE4A-3657-40DE-94DC-D2440488CE7D}.Debug|Mixed Platforms.ActiveCfg = Debug|.NET
+		{392CAE4A-3657-40DE-94DC-D2440488CE7D}.Debug|Mixed Platforms.Build.0 = Debug|.NET
+		{392CAE4A-3657-40DE-94DC-D2440488CE7D}.Release|Any CPU.ActiveCfg = Debug|.NET
+		{392CAE4A-3657-40DE-94DC-D2440488CE7D}.Release|Mixed Platforms.ActiveCfg = Debug|.NET
+		{392CAE4A-3657-40DE-94DC-D2440488CE7D}.Release|Mixed Platforms.Build.0 = Debug|.NET
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BFF25A8C-A1B7-4E96-9B68-4B21D20BD038}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E420E8C0-643B-4273-8FD8-11DF34F3692D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
