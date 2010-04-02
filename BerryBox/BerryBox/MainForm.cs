@@ -1156,15 +1156,8 @@ namespace BerryBox
             CreateJavaLoader(false, false, false);
             this.javaloader.StartInfo.Arguments += string.Format("wipe {0}",addParams);
             this.javaloader.Start();
-            if (this.javaloader.WaitForExit(10000))
-            {
-                MessageBox.Show("设备已擦除", "操作成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                ErrorBox("设备已擦除失败");
-
-            }
+           this.javaloader.WaitForExit();
+           MessageBox.Show("设备已擦除", "操作成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
             ButtonToggle(btn_SysTools_Wipe, true);
         }
         #endregion
