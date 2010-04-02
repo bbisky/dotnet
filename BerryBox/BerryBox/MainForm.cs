@@ -1197,18 +1197,23 @@ namespace BerryBox
 
             Thread thread = new Thread(new ParameterizedThreadStart(DownloadFromOTA));
             thread.IsBackground = true;
-            thread.Start(url);
+            thread.Start(new string[]{url,model,os});
 
            
         }
 
-        void DownloadFromOTA(object address) {
-            string url = (string)address;
+        void DownloadFromOTA(object param) {
+            string[] paras = (string[])param;
+
+            string url = paras[0];
+            string model = string.IsNullOrEmpty(paras[1])?"8300":paras[1];
+            string os = string.IsNullOrEmpty(paras[2]) ? "4.5" : paras[2];
             StringBuilder sb = new StringBuilder();
             HttpWebRequest req = WebRequest.Create(url) as HttpWebRequest;
             req.UserAgent = string.Format("BlackBerry{0}/{1}.0Profile/MIDP-2.0 Configuration/CLDC-1.1",
-                                            comboBox_OTA_DeviceModel.SelectedItem.ToString(),
-                                            comboBox_OTA_OS.SelectedItem.ToString());
+                                            model,
+                                            os);
+            req.KeepAlive = false;
             try
             {
                 HttpWebResponse wr = req.GetResponse() as HttpWebResponse;                
@@ -1226,11 +1231,11 @@ namespace BerryBox
             CodLoaderLog(sb.ToString());
             string urlPath = url.Substring(0, url.LastIndexOf("/")+1);
             JadReader reader = new JadReader(sb.ToString());
-            SetControlAttribute(label_OTA_CodCount,"Text",string.Format(label_OTA_CodCount.Text, reader.CodFiles.Count));
+            SetControlAttribute(label_OTA_CodCount, "Text", string.Format("共发现{0}个Cod文件", reader.CodFiles.Count));
             SetControlAttribute(label_OTA_MIDletName,"Text",string.Format("{0}-[{1}]", reader.MIDletName, FileSizeHelper.FriendlySize(reader.TotalSize)));
 
             //savepath
-            string savePath = string.IsNullOrEmpty(tb_OTA_SavePath.Text) ? Environment.CurrentDirectory : tb_OTA_SavePath.Text;
+            string savePath = this.config.GetString("OTADownloader", "SavePath", Environment.CurrentDirectory);                
 
             savePath = Path.Combine(savePath, reader.MIDletName);
 
@@ -1296,21 +1301,21 @@ namespace BerryBox
             
             MessageBox.Show("下载成功", "下载成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        //处理文件名中的非法字符
-        string OSSafeFileName(string filename)
-        {
-            string safeName = filename;
-            if (filename.IndexOf("://") > 0)
-                safeName = Path.GetFileName(filename);
-            //remove invalid chars
-            char[] invalid = Path.GetInvalidFileNameChars();
-            foreach (char c in invalid) {
-                safeName = safeName.Replace(c, '_');
-            }
-            if (Path.GetExtension(safeName).ToLower() != ".cod")
-                safeName += ".cod";
-            return safeName;
-        }
+        ////处理文件名中的非法字符
+        //string OSSafeFileName(string filename)
+        //{
+        //    string safeName = filename;
+        //    if (filename.IndexOf("://") > 0)
+        //        safeName = Path.GetFileName(filename);
+        //    //remove invalid chars
+        //    char[] invalid = Path.GetInvalidFileNameChars();
+        //    foreach (char c in invalid) {
+        //        safeName = safeName.Replace(c, '_');
+        //    }
+        //    if (Path.GetExtension(safeName).ToLower() != ".cod")
+        //        safeName += ".cod";
+        //    return safeName;
+        //}
      
         void OTADownloaderLog(string msg)
         {
