@@ -1213,13 +1213,29 @@ namespace BerryBox
             req.UserAgent = string.Format("BlackBerry{0}/{1}.0Profile/MIDP-2.0 Configuration/CLDC-1.1",
                                             model,
                                             os);
-            req.KeepAlive = false;
+            req.AllowAutoRedirect = true;
+            req.MaximumAutomaticRedirections = 2;
+           // req.KeepAlive = false;
+           // req.Proxy = new WebProxy("127.0.0.1", 8000);
             try
             {
-                HttpWebResponse wr = req.GetResponse() as HttpWebResponse;                
+                HttpWebResponse wr = req.GetResponse() as HttpWebResponse;
+                CodLoaderLog("ContentType:" + wr.ContentType);
+                CodLoaderLog("ContentEncoding:" + wr.ContentEncoding);
+                CodLoaderLog("Server:" + wr.Server);
+                CodLoaderLog("StatusDescription:" + wr.StatusDescription);
+               
+                
                 using (StreamReader s = new StreamReader(wr.GetResponseStream()))
                 {
                     sb.Append(s.ReadToEnd());
+                }
+                CodLoaderLog(sb.ToString());
+                if (wr.ContentType != "text/vnd.sun.j2me.app-descriptor")
+                {
+                    ErrorBox("服务器响应内容不是一个有效的jad内容");
+                    SetControlAttribute(groupBox_OTA, "Enabled", true);
+                    return;
                 }
             }
             catch (Exception ex) {
@@ -1228,7 +1244,7 @@ namespace BerryBox
                 return;
             }
             
-            CodLoaderLog(sb.ToString());
+            
             string urlPath = url.Substring(0, url.LastIndexOf("/")+1);
             JadReader reader = new JadReader(sb.ToString());
             SetControlAttribute(label_OTA_CodCount, "Text", string.Format("共发现{0}个Cod文件", reader.CodFiles.Count));
