@@ -129,6 +129,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btn_Global_InstallDriver = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabCodLoader.SuspendLayout();
             this.panel_CodLoader.SuspendLayout();
@@ -1045,6 +1046,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.btn_Global_InstallDriver);
             this.groupBox5.Controls.Add(this.label_Global_OS);
             this.groupBox5.Controls.Add(this.label15);
             this.groupBox5.Controls.Add(this.label_Global_Status);
@@ -1213,6 +1215,16 @@
             this.panel2.Size = new System.Drawing.Size(592, 131);
             this.panel2.TabIndex = 9;
             // 
+            // btn_Global_InstallDriver
+            // 
+            this.btn_Global_InstallDriver.Location = new System.Drawing.Point(461, 12);
+            this.btn_Global_InstallDriver.Name = "btn_Global_InstallDriver";
+            this.btn_Global_InstallDriver.Size = new System.Drawing.Size(98, 23);
+            this.btn_Global_InstallDriver.TabIndex = 13;
+            this.btn_Global_InstallDriver.Text = "加载USB驱动";
+            this.btn_Global_InstallDriver.UseVisualStyleBackColor = true;
+            this.btn_Global_InstallDriver.Click += new System.EventHandler(this.btn_Global_InstallDriver_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1368,6 +1380,7 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Button btn_OTA_BrowseSaveFolder;
         private System.Windows.Forms.LinkLabel link_OTA_Help;
+        private System.Windows.Forms.Button btn_Global_InstallDriver;
     }
 }
 

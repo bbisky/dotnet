@@ -108,6 +108,7 @@
     <Compile Include="Utility\IniFile.cs" />
     <Compile Include="Utility\JadReader.cs" />
     <Compile Include="Utility\JavaLoader.cs" />
+    <Compile Include="Utility\USBDriverInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ChangeLog.txt">
