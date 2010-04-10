@@ -1216,6 +1216,7 @@ namespace BerryBox
             req.AllowAutoRedirect = true;
             req.MaximumAutomaticRedirections = 2;
            // req.KeepAlive = false;
+           
            // req.Proxy = new WebProxy("127.0.0.1", 8000);
             try
             {
@@ -1387,6 +1388,12 @@ namespace BerryBox
             tip.SetToolTip(link_OTA_Help,"此处设置下载时使用的UserAgent,\r\n有的下载系统会根据UserAgent重定向至\r\n符合手机系统版本的软件,\r\n比如:google的全系列软件！");
             //tip.SetToolTip(comboBox_OTA_DeviceModel, "此处设置下载时使用的UserAgent,\r\n有的下载系统会根据UserAgent重定向至\r\n符合手机系统版本的软件,\r\n比如:google的全系列软件！");
 
+        }
+
+        private void btn_Global_InstallDriver_Click(object sender, EventArgs e)
+        {
+            USBDriverInstaller installer = new USBDriverInstaller();
+            installer.Install();
         }
 
       
