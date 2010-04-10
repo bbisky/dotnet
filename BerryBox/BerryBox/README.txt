@@ -28,3 +28,6 @@ Requirements
  4. OTA软件下载工具
 	* OTA下载软件功能, 支持设置机型和系统版本(对判断UserAgent参数的网站特别有用，如Google全系列的软件)
 	
+ 5. USB接口驱动自动安装功能，完全脱离DM
+	
+	

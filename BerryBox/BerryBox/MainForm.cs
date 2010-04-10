@@ -218,6 +218,7 @@ namespace BerryBox
         }
         #endregion
 
+        #region Global
         /// <summary>
         /// 创建codloader process并设置初始参数
         /// </summary>
@@ -240,6 +241,18 @@ namespace BerryBox
             javaloader.StartInfo.RedirectStandardError = redirectError;
             javaloader.StartInfo.CreateNoWindow = createNoWindow;
         }
+
+        private void btn_Global_ConnectDevice_Click(object sender, EventArgs e)
+        {
+            ButtonToggle(btn_Global_ConnectDevice, false);
+            Thread thread_DeviceInfo = new Thread(new ThreadStart(DeviceInfo));
+            thread_DeviceInfo.IsBackground = true;
+            thread_DeviceInfo.Start();
+            //thread_DeviceInfo.Join();
+
+
+        }
+        #endregion
 
         #region Jad Creator
         private void btnBrowserCodFolder_Click(object sender, EventArgs e)
@@ -714,7 +727,7 @@ namespace BerryBox
             {
                 DirectoryInfo root = new DirectoryInfo(path);
                 FileInfo[] codFiles = root.GetFiles("*.cod");
-                lvCodLoaderFiles.Items.Clear();
+                //lvCodLoaderFiles.Items.Clear();
                 if (codFiles.Length == 0)
                 {
                     CodLoaderLog("该目录没有cod文件");
@@ -1078,18 +1091,6 @@ namespace BerryBox
             System.Diagnostics.Process.Start("iexplore.exe", "http://oteam.cn/?from=BerryBox v" + Application.ProductVersion);
         }
         #endregion
-
-       
-        private void btn_Global_ConnectDevice_Click(object sender, EventArgs e)
-        {
-            ButtonToggle(btn_Global_ConnectDevice, false);
-            Thread thread_DeviceInfo = new Thread(new ThreadStart(DeviceInfo));
-            thread_DeviceInfo.IsBackground = true;
-            thread_DeviceInfo.Start();
-            //thread_DeviceInfo.Join();
-
-
-        }
 
         #region  系统工具
 
@@ -1528,7 +1529,7 @@ namespace BerryBox
                 comboBox_OTA_DeviceModel.Items.Add(string.Format("{0}", di.Model));
             }
         }
-        #endregion
+       
 
         private void btn_OTA_BrowseSaveFolder_Click(object sender, EventArgs e)
         {
@@ -1549,7 +1550,9 @@ namespace BerryBox
             //tip.SetToolTip(comboBox_OTA_DeviceModel, "此处设置下载时使用的UserAgent,\r\n有的下载系统会根据UserAgent重定向至\r\n符合手机系统版本的软件,\r\n比如:google的全系列软件！");
 
         }
+        #endregion
 
+        #region Driver Installer
         private void btn_Global_InstallDriver_Click(object sender, EventArgs e)
         {
             // Elevate the process if it is not run as administrator.
@@ -1589,6 +1592,6 @@ namespace BerryBox
 
         }
 
-      
+        #endregion
     }
 }
