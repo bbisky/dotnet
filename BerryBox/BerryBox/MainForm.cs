@@ -15,6 +15,8 @@ using BerryBox.Components;
 using System.Drawing.Imaging;
 using System.Reflection;
 using System.Net;
+using System.Security.Principal;
+using System.Runtime.InteropServices;
 
 namespace BerryBox
 {
@@ -63,7 +65,159 @@ namespace BerryBox
                 comboBox_OTA_DeviceModel.Text = this.config.GetString("OTADownloader", "Model", "");
                 comboBox_OTA_OS.SelectedItem = this.config.GetString("OTADownloader", "OS", "4.0");
                 tb_OTA_SavePath.Text = this.config.GetString("OTADownloader", "SavePath", "");
+
+
+                //UAC 
+                SetDriverInstallButtonStyle();
+                
         }
+
+        #region Helper Functions for UAC
+
+        /// <summary>
+        /// The function checks whether the current process is run as administrator.
+        /// In other words, it dictates whether the primary access token of the 
+        /// process belongs to user account that is a member of the local 
+        /// Administrators group and it is elevated.
+        /// </summary>
+        /// <returns>
+        /// Returns true if the primary access token of the process belongs to user 
+        /// account that is a member of the local Administrators group and it is 
+        /// elevated. Returns false if the token does not.
+        /// </returns>
+        internal bool IsRunAsAdmin()
+        {
+            WindowsIdentity id = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(id);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+
+        /// <summary>
+        /// The function gets the elevation information of the current process. It 
+        /// dictates whether the process is elevated or not. Token elevation is only 
+        /// available on Windows Vista and newer operating systems, thus 
+        /// IsProcessElevated throws a C++ exception if it is called on systems prior 
+        /// to Windows Vista. It is not appropriate to use this function to determine 
+        /// whether a process is run as administartor.
+        /// </summary>
+        /// <returns>
+        /// Returns true if the process is elevated. Returns false if it is not.
+        /// </returns>
+        /// <exception cref="System.ComponentModel.Win32Exception">
+        /// When any native Windows API call fails, the function throws a Win32Exception 
+        /// with the last error code.
+        /// </exception>
+        /// <remarks>
+        /// TOKEN_INFORMATION_CLASS provides TokenElevationType to check the elevation 
+        /// type (TokenElevationTypeDefault / TokenElevationTypeLimited / 
+        /// TokenElevationTypeFull) of the process. It is different from TokenElevation 
+        /// in that, when UAC is turned off, elevation type always returns 
+        /// TokenElevationTypeDefault even though the process is elevated (Integrity 
+        /// Level == High). In other words, it is not safe to say if the process is 
+        /// elevated based on elevation type. Instead, we should use TokenElevation. 
+        /// </remarks>
+        internal bool IsProcessElevated()
+        {
+            bool fIsElevated = false;
+            SafeTokenHandle hToken = null;
+            int cbTokenElevation = 0;
+            IntPtr pTokenElevation = IntPtr.Zero;
+
+            try
+            {
+                // Open the access token of the current process with TOKEN_QUERY.
+                if (!NativeMethod.OpenProcessToken(Process.GetCurrentProcess().Handle,
+                    NativeMethod.TOKEN_QUERY, out hToken))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+
+                // Allocate a buffer for the elevation information.
+                cbTokenElevation = Marshal.SizeOf(typeof(TOKEN_ELEVATION));
+                pTokenElevation = Marshal.AllocHGlobal(cbTokenElevation);
+                if (pTokenElevation == IntPtr.Zero)
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+
+                // Retrieve token elevation information.
+                if (!NativeMethod.GetTokenInformation(hToken,
+                    TOKEN_INFORMATION_CLASS.TokenElevation, pTokenElevation,
+                    cbTokenElevation, out cbTokenElevation))
+                {
+                    // When the process is run on operating systems prior to Windows 
+                    // Vista, GetTokenInformation returns false with the error code 
+                    // ERROR_INVALID_PARAMETER because TokenElevation is not supported 
+                    // on those operating systems.
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+
+                // Marshal the TOKEN_ELEVATION struct from native to .NET object.
+                TOKEN_ELEVATION elevation = (TOKEN_ELEVATION)Marshal.PtrToStructure(
+                    pTokenElevation, typeof(TOKEN_ELEVATION));
+
+                // TOKEN_ELEVATION.TokenIsElevated is a non-zero value if the token 
+                // has elevated privileges; otherwise, a zero value.
+                fIsElevated = (elevation.TokenIsElevated != 0);
+            }
+            finally
+            {
+                // Centralized cleanup for all allocated resources. 
+                if (hToken != null)
+                {
+                    hToken.Close();
+                    hToken = null;
+                }
+                if (pTokenElevation != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(pTokenElevation);
+                    pTokenElevation = IntPtr.Zero;
+                    cbTokenElevation = 0;
+                }
+            }
+
+            return fIsElevated;
+        }
+
+        
+
+        private void SetDriverInstallButtonStyle() {
+
+            // Get and display the process elevation information (IsProcessElevated) 
+            // and integrity level (GetProcessIntegrityLevel). The information is not 
+            // available on operating systems prior to Windows Vista.
+            if (Environment.OSVersion.Version.Major >= 6)
+            {
+                // Running Windows Vista or later (major version >= 6). 
+
+                try
+                {
+                    // Get and display the process elevation information.
+                    bool fIsElevated = IsProcessElevated();
+                    
+                    // Update the Self-elevate button to show the UAC shield icon on 
+                    // the UI if the process is not elevated.
+                    this.btn_Global_InstallDriver.FlatStyle = FlatStyle.System;
+                    NativeMethod.SendMessage(btn_Global_InstallDriver.Handle,
+                        NativeMethod.BCM_SETSHIELD, 0,
+                        fIsElevated ? IntPtr.Zero : (IntPtr)1);
+                    //显示管理员到form的标题栏
+                    if (IsRunAsAdmin())
+                        this.Text = "管理员:" + this.Text;
+                }
+                catch (Exception ex)
+                {
+                    
+                    MessageBox.Show(ex.Message, "An error occurred in IsProcessElevated",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                
+            }
+        }
+        #endregion
+
         /// <summary>
         /// 创建codloader process并设置初始参数
         /// </summary>
@@ -793,7 +947,7 @@ namespace BerryBox
         #region common
         //错误警示
         private void ErrorBox(string msg) {
-            MessageBox.Show(msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this,msg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         //将list先中项组合为字符串参数
@@ -1175,6 +1329,12 @@ namespace BerryBox
                 tb_OTA_URL.Focus();
                 return;
             }
+            else if (!url.ToLower().StartsWith("http://") && !url.ToLower().StartsWith("https://"))
+            {
+                ErrorBox("抱歉,目前只支持http或https的下载地址!");
+                tb_OTA_URL.Focus();
+                return;
+            }
             groupBox_OTA.Enabled = false;
             tb_OTA_CodFiles.Text = "";
             tbCodLoaderLog.Text = "";
@@ -1392,8 +1552,41 @@ namespace BerryBox
 
         private void btn_Global_InstallDriver_Click(object sender, EventArgs e)
         {
-            USBDriverInstaller installer = new USBDriverInstaller();
-            installer.Install();
+            // Elevate the process if it is not run as administrator.
+            if (!IsRunAsAdmin())
+            {
+                // Launch itself as administrator
+                ProcessStartInfo proc = new ProcessStartInfo();
+                proc.UseShellExecute = true;
+                proc.WorkingDirectory = Environment.CurrentDirectory;
+                proc.FileName = Application.ExecutablePath;
+                proc.Verb = "runas";
+
+                try
+                {
+                    Process.Start(proc);
+                }
+                catch
+                {
+                    // The user refused to allow privileges elevation.
+                    // Do nothing and return directly ...
+                    return;
+                }
+
+                Application.Exit();  // Quit itself
+            }
+            else
+            {
+                if (DialogResult.OK == 
+                    MessageBox.Show(this,"请根据稍候弹出的驱动安装窗口操作,直到显示驱动安装成功!", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Information))
+                {
+                    CodLoaderLog("正在加载USB驱动...");
+                    USBDriverInstaller installer = new USBDriverInstaller();
+                    bool ret = installer.Install();
+                    CodLoaderLog(ret ? "驱动安装成功!":"安装驱动失败!");
+                }
+            }
+
         }
 
       

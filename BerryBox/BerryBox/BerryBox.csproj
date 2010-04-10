@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0B0C0E06-8624-421D-829C-105C3AD8C9D4}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -107,7 +107,7 @@
     <Compile Include="Utility\FileSizeHelper.cs" />
     <Compile Include="Utility\IniFile.cs" />
     <Compile Include="Utility\JadReader.cs" />
-    <Compile Include="Utility\JavaLoader.cs" />
+    <Compile Include="Utility\NativeMethod.cs" />
     <Compile Include="Utility\USBDriverInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +123,9 @@
     </Content>
     <Content Include="Library\ICSharpCode.SharpZipLib.dll" />
     <Content Include="README.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="USB Drivers.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
