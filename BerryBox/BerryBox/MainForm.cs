@@ -564,7 +564,13 @@ namespace BerryBox
                 string output = sbDeviceInfo.ToString();
                 if (!String.IsNullOrEmpty(output))
                 {
-                    Regex re = new Regex(@"Id:\s+(\w+)PIN:\s+([0-9a-fx]{10}).+运营商代码:\s+(\d+)无线电状态:\s+(\w)", RegexOptions.Singleline);
+                    Regex re;
+                    if(output.StartsWith("Hardware"))
+                        //英文版javaloader
+                        re = new Regex(@"Id:\s+(\w+)PIN:\s+([0-9a-fx]{10}).+Vendor\sID:\s+([0-9\-]{1,5})Active\sWAFs:\s+0x(\d)", RegexOptions.Singleline);
+                    else
+                        re = new Regex(@"Id:\s+(\w+)PIN:\s+([0-9a-fx]{10}).+运营商代码:\s+([0-9\-]{1,5})无线电状态:\s+(\w)", RegexOptions.Singleline);
+                   
                     if (re.IsMatch(output))
                     {
                         Match match = re.Match(output);
