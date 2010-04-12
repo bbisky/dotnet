@@ -15,7 +15,8 @@ Requirements
 	* 删除手机已安装的软件
 	* 保存手机已安装的cod	
 	
- 2. Jad生成工具
+ 2. Jad/Alx生成工具
+    * 根据指定目录的COD文件生成.alx文件,方便使用桌面管理器安装
 	* 根据指定目录的cod文件生成jad文件，直接在手机上安装jad
 	* cod文件会自动检测并拆解为最小单元
  
@@ -29,5 +30,8 @@ Requirements
 	* OTA下载软件功能, 支持设置机型和系统版本(对判断UserAgent参数的网站特别有用，如Google全系列的软件)
 	
  5. USB接口驱动自动安装功能，完全脱离DM
+ 
+ 6. Jar2Cod Jar转换cod的工具*
+	*该功能需要安装JRE以及Blackberry JDK中的rapc,net_rim_api.jar
 	
 	

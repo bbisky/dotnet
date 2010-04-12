@@ -22,6 +22,7 @@ namespace BerryBox
 {
     public partial class MainForm : Form
     {
+        
         private IniFile config = new IniFile("BerryBox.ini");
         //list中是否为本地的cod文件
         private bool m_IsLocalFile = true;
@@ -737,14 +738,13 @@ namespace BerryBox
             }
             else
             {
-                foreach (PropertyInfo pi in control.GetType().GetProperties())
-                {
-                    if (pi.Name == attribute)
+                PropertyInfo pi = control.GetType().GetProperty(attribute);
+                 if (pi!=null)
                     {
                         pi.SetValue(control, value, null);
                     }
-                }
-            }
+              }
+            
         }
         private delegate void SetButtonStatus(Button button, bool status);
         private delegate void SetLableTextDelegate(Label label, string text);
@@ -842,7 +842,7 @@ namespace BerryBox
             if (tbCodLoaderLog.InvokeRequired)
             {
                 WriteLogDelegate log = new WriteLogDelegate(CodLoaderLog);
-                this.BeginInvoke(log, msg);
+                this.tbCodLoaderLog.BeginInvoke(log, msg);
             }
             else
             {
@@ -1890,7 +1890,7 @@ namespace BerryBox
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab.Name == "tabJar2Cod")
+            if (tabControl1.SelectedTab.Name == "tabJar2Cod" && !string.IsNullOrEmpty(tb_Jar2Cod_RAPC.Text) && !string.IsNullOrEmpty(tb_Jar2Cod_RIMAPI.Text))
             {
                 tb_Jar2Cod_RAPC.Text = this.config.GetString("Jar2Cod", "RAPC", "");
                 tb_Jar2Cod_RIMAPI.Text = this.config.GetString("Jar2Cod", "NetRimAPI", "");
