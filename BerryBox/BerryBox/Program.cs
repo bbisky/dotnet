@@ -42,7 +42,7 @@ namespace BerryBox
             
             Console.WriteLine(jadreader.MIDletName);
             Console.WriteLine(jadreader.CodFiles.Count);
-             * */
+             */
             if (!CheckEnvironment())
             {
                 MessageBox.Show("没有找到JavaLoader.exe或ICSharpCode.SharpZipLib.dll,请将该文件拷贝到本程序同一目录下:)", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error); 
@@ -60,7 +60,8 @@ namespace BerryBox
                 Application.SetCompatibleTextRenderingDefault(false);                
                 Application.Run(new MainForm());
             }
-            
+             
+          //  Application.Run(new TestRichTextBox() );
         }
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
