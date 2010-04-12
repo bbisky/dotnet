@@ -27,7 +27,7 @@ namespace BerryBox
         //list中是否为本地的cod文件
         private bool m_IsLocalFile = true;
         private Process javaloader;
-
+        private OutputLogger m_Logger;
         /// <summary>
         /// 取得密码参数
         /// </summary>
@@ -45,6 +45,8 @@ namespace BerryBox
         {
             
                 InitializeComponent();
+                this.m_Logger = new OutputLogger(this.rtb_LogBox);
+
                 string version = this.ProductVersion.Substring(0,this.ProductVersion.LastIndexOf("."));
                 labelBuild.Text = "(build:" + this.ProductVersion.Substring(this.ProductVersion.LastIndexOf(".")+1)+")";
                 this.Text += "-" + version + labelBuild.Text;
@@ -625,7 +627,7 @@ namespace BerryBox
         void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e.Data != null)
-                CodLoaderLog(e.Data.ToString());
+                this.m_Logger.AppendError(e.Data.ToString());
         }
         private StringBuilder sbDeviceInfo = new StringBuilder();
         void p_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -808,8 +810,7 @@ namespace BerryBox
                 //lvCodLoaderFiles.Items.Clear();
                 if (codFiles.Length == 0)
                 {
-                    CodLoaderLog("该目录没有cod文件");
-
+                    this.m_Logger.AppendError("该目录没有cod文件");
                 }
                 else
                 {
@@ -824,7 +825,7 @@ namespace BerryBox
                     }
                     if (codFiles.Length > 0)
                         this.m_IsLocalFile = true;
-                    CodLoaderLog(string.Format("发现个{0}cod文件在{1}", codFiles.Length,path));
+                    this.m_Logger.AppendSuccess(string.Format("发现个{0}cod文件在{1}", codFiles.Length,path));
                 }
                 //保存最后目录位置
                 config.WriteValue("codloader", "LastCodFolder", lvCodLoaderFiles.Tag.ToString());
@@ -833,26 +834,26 @@ namespace BerryBox
 #endregion
 
         #region 输出到日志窗口
-        private delegate void WriteLogDelegate(string msg);
+        //private delegate void WriteLogDelegate(string msg);
 
-        void CodLoaderLog(string msg) {
-            if (string.IsNullOrEmpty(msg))
-                return;
-            msg = msg.Replace("RIM Java Loader for WinLoader\r\n版权 2001-2005 Research In Motion Limited","");
-            if (tbCodLoaderLog.InvokeRequired)
-            {
-                WriteLogDelegate log = new WriteLogDelegate(CodLoaderLog);
-                this.tbCodLoaderLog.BeginInvoke(log, msg);
-            }
-            else
-            {
-                tbCodLoaderLog.Text += msg + "\r\n";
-                //滚动到底部
-                this.tbCodLoaderLog.SelectionStart = this.tbCodLoaderLog.Text.Length;
-                this.tbCodLoaderLog.SelectionLength = 0;
-                this.tbCodLoaderLog.ScrollToCaret();
-            }
-        }
+        //void CodLoaderLog(string msg) {
+        //    if (string.IsNullOrEmpty(msg))
+        //        return;
+        //    msg = msg.Replace("RIM Java Loader for WinLoader\r\n版权 2001-2005 Research In Motion Limited","");
+        //    if (tbCodLoaderLog.InvokeRequired)
+        //    {
+        //        WriteLogDelegate log = new WriteLogDelegate(CodLoaderLog);
+        //        this.tbCodLoaderLog.BeginInvoke(log, msg);
+        //    }
+        //    else
+        //    {
+        //        tbCodLoaderLog.Text += msg + "\r\n";
+        //        //滚动到底部
+        //        this.tbCodLoaderLog.SelectionStart = this.tbCodLoaderLog.Text.Length;
+        //        this.tbCodLoaderLog.SelectionLength = 0;
+        //        this.tbCodLoaderLog.ScrollToCaret();
+        //    }
+        //}
 
         
         #endregion      
@@ -879,7 +880,7 @@ namespace BerryBox
             CreateJavaLoader(false, false, false);
             this.javaloader.StartInfo.Arguments += sb.ToString();            
             this.javaloader.Start();
-            CodLoaderLog("正在加载软件...");          
+            this.m_Logger.AppendText("正在加载软件...");          
             this.javaloader.WaitForExit();
 
         }
@@ -911,7 +912,7 @@ namespace BerryBox
 
             this.javaloader.StartInfo.Arguments += "dir";         
             this.javaloader.Start();
-            CodLoaderLog("加载设备上的模块信息...");
+            this.m_Logger.AppendText("加载设备上的模块信息...");
             //新线程读取，防止锁死
             Thread threadError = new Thread(new ParameterizedThreadStart(ReadError));
             Thread threadOutput = new Thread(new ParameterizedThreadStart(ReadOutput));
@@ -934,7 +935,7 @@ namespace BerryBox
                 sb.Append((char)a);              
             }
             // sb.Remove(0, sb.ToString().IndexOf(@"Limited\r\n") + 11);
-            CodLoaderLog(sb.ToString());
+            this.m_Logger.AppendError(sb.ToString());
             Thread.CurrentThread.Abort();
             return;
         }
@@ -956,12 +957,13 @@ namespace BerryBox
         #endregion
         
         #region 绑定模块到LIST
+        delegate void BindStrToListDelegate(string msg);
         void BindCodFilesToList(string msg)
         {
 
             if (lvCodLoaderFiles.InvokeRequired)
             {
-                WriteLogDelegate bindToList = new WriteLogDelegate(BindCodFilesToList);
+                BindStrToListDelegate bindToList = new BindStrToListDelegate(BindCodFilesToList);
                 this.BeginInvoke(bindToList, msg);
             }
             else
@@ -987,7 +989,7 @@ namespace BerryBox
                     }
                     if (count > 0)
                         this.m_IsLocalFile = false;
-                    CodLoaderLog(string.Format("共有{0}个cods", count));
+                    this.m_Logger.AppendSuccess(string.Format("共有{0}个cods", count));
                 }
             }
         }
@@ -1022,12 +1024,12 @@ namespace BerryBox
                         + strParams;
 
                     this.javaloader.Start();
-                    CodLoaderLog("删除选定的模块..." + (cbForceDelete.Checked ? "使用\"-f\"参数强制删除正在使用的模块" : ""));
+                    this.m_Logger.AppendWarning("删除选定的模块..." + (cbForceDelete.Checked ? "使用\"-f\"参数强制删除正在使用的模块" : ""));
 
                     string output = this.javaloader.StandardOutput.ReadToEnd();
                     string error = this.javaloader.StandardError.ReadToEnd();
-                    CodLoaderLog(output);
-                    CodLoaderLog(error);
+                    this.m_Logger.AppendText(output);
+                    this.m_Logger.AppendError(error);
                     this.javaloader.WaitForExit();
                 }
             }
@@ -1109,7 +1111,7 @@ namespace BerryBox
                     this.javaloader.StartInfo.Arguments += "save " + strParams;
                    
                     this.javaloader.Start();
-                    CodLoaderLog("保存选定的模块...");
+                    this.m_Logger.AppendText("保存选定的模块...");
 
                    // string output = this.javaloader.StandardOutput.ReadToEnd();
                     string error = this.javaloader.StandardError.ReadToEnd();
@@ -1138,7 +1140,7 @@ namespace BerryBox
                     }
                     else
                     {
-                        CodLoaderLog("保存文件失败！");
+                        this.m_Logger.AppendError("保存文件失败！");
                     }
                 }
               
@@ -1416,7 +1418,7 @@ namespace BerryBox
             }
             groupBox_OTA.Enabled = false;
             tb_OTA_CodFiles.Text = "";
-            tbCodLoaderLog.Text = "";
+            this.m_Logger.Clear();
             label_OTA_MIDletName.Text = "";
             label_OTA_CodCount.Text = "共发现{0}个Cod文件";
             progressBar_OTA.Value = 0;
@@ -1460,17 +1462,18 @@ namespace BerryBox
             try
             {
                 HttpWebResponse wr = req.GetResponse() as HttpWebResponse;
-                CodLoaderLog("ContentType:" + wr.ContentType);
-                CodLoaderLog("ContentEncoding:" + wr.ContentEncoding);
-                CodLoaderLog("Server:" + wr.Server);
-                CodLoaderLog("StatusDescription:" + wr.StatusDescription);
+
+                this.m_Logger.AppendText("ContentType:" + wr.ContentType);
+                this.m_Logger.AppendText("ContentEncoding:" + wr.ContentEncoding);
+                this.m_Logger.AppendText("Server:" + wr.Server);
+                this.m_Logger.AppendText("StatusDescription:" + wr.StatusDescription);
                
                 
                 using (StreamReader s = new StreamReader(wr.GetResponseStream()))
                 {
                     sb.Append(s.ReadToEnd());
                 }
-                CodLoaderLog(sb.ToString());
+                this.m_Logger.AppendText(sb.ToString());
                 if (wr.ContentType != "text/vnd.sun.j2me.app-descriptor")
                 {
                     ErrorBox("服务器响应内容不是一个有效的jad内容");
@@ -1580,7 +1583,7 @@ namespace BerryBox
 
             if (tb_OTA_CodFiles.InvokeRequired)
             {
-                WriteLogDelegate log = new WriteLogDelegate(OTADownloaderLog);
+                BindStrToListDelegate log = new BindStrToListDelegate(OTADownloaderLog);
                 this.BeginInvoke(log, msg);
             }
             else
@@ -1661,10 +1664,13 @@ namespace BerryBox
                 if (DialogResult.OK == 
                     MessageBox.Show(this,"请根据稍候弹出的驱动安装窗口操作,直到显示驱动安装成功!", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Information))
                 {
-                    CodLoaderLog("正在加载USB驱动...");
+                    this.m_Logger.AppendText("正在加载USB驱动...");
                     USBDriverInstaller installer = new USBDriverInstaller();
                     bool ret = installer.Install();
-                    CodLoaderLog(ret ? "驱动安装成功!":"安装驱动失败!");
+                    if (ret)
+                        this.m_Logger.AppendSuccess("驱动安装成功!");
+                    else
+                        this.m_Logger.AppendError("安装驱动失败!");
                 }
             }
 
@@ -1750,7 +1756,7 @@ namespace BerryBox
             
             if (!string.IsNullOrEmpty(path))
             {
-                tbCodLoaderLog.Text = "";
+                this.m_Logger.Clear();
                 
                 string []files = tb_Jar2Cod_JarFiles.Text.Split(new string[] {"\r\n" },  StringSplitOptions.RemoveEmptyEntries);
                 if (files.Length > 0)
@@ -1782,36 +1788,35 @@ namespace BerryBox
                     jad = "";
 
 
-                CodLoaderLog("开始转换..." + jar);
+                this.m_Logger.AppendText("开始转换..." + jar);
                 if (!string.IsNullOrEmpty(jad))
                 {
-                    CodLoaderLog("使用JAD..." + jad);
+                    this.m_Logger.AppendWarning("使用JAD..." + jad);
                 }
                 else
                 {
-                    CodLoaderLog("没有使用JAD文件");
+                    this.m_Logger.AppendWarning("没有使用JAD文件");
                 }
                 RapcRun(rapc, rimapi, codename, jad, jar);
 
                 if (File.Exists(codename + ".cod"))
                 {
-                    CodLoaderLog("转换后的COD：" + codename + ".cod");
+                    this.m_Logger.AppendSuccess("转换后的COD：" + codename + ".cod");
                 }
                 if (File.Exists(codename + ".err"))
                 {
                     StreamReader sr = new StreamReader(File.OpenRead(codename + ".err"));
                     string err = sr.ReadToEnd();
                     sr.Close();
-                    CodLoaderLog("！！！！！转换好像出错了！！！！！");
-                    CodLoaderLog(err);
+                    this.m_Logger.AppendWarning("！！！！！转换好像出错了！！！！！");
+                    this.m_Logger.AppendError(err);
                 }
-                CodLoaderLog("  ");
-                CodLoaderLog("==========================================================");
-
-                CodLoaderLog("  ");
+                this.m_Logger.AppendText("");
+                this.m_Logger.AppendText("==========================================================");
+                this.m_Logger.AppendText("");
             }
             SetControlAttribute(btn_Jar2Cod_Convert, "Enabled", true);
-            CodLoaderLog("全部转换过程完成,请查看日志检查是否有错误发生！");
+            this.m_Logger.AppendWarning("全部转换过程完成,请查看日志检查是否有错误发生！");
         }
 
         void RapcRun(string rapcpath, string rimapi,string codename,string jad,string jar) {
@@ -1846,7 +1851,7 @@ namespace BerryBox
         void rapc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e.Data != null)
-                CodLoaderLog(e.Data.ToString());
+                this.m_Logger.AppendText(e.Data.ToString());
         }
 
         private void btn_Jar2Cod_Select_RAPC_Click(object sender, EventArgs e)

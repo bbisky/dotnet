@@ -69,7 +69,7 @@ namespace BerryBox
             
                 EventLog.WriteLog(e.Exception.Message, System.Diagnostics.EventLogEntryType.Error);
 
-                MessageBox.Show("[Application_ThreadException]\r\n非常抱歉，程序非正常结束，请重新尝试运行本程序，如果出现与此相同的提示，请联系软件作者！", "疯掉了~~", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("[AT]\r\n非常抱歉，程序非正常结束，请重新尝试运行本程序，如果出现与此相同的提示，请联系软件作者！", "疯掉了~~", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
         }
 
@@ -77,7 +77,7 @@ namespace BerryBox
         {
            
                 EventLog.WriteLog(e.ExceptionObject.ToString(), System.Diagnostics.EventLogEntryType.Error);
-                MessageBox.Show("[CurrentDomain_UnhandledException]\r\n非常抱歉，程序非正常结束，请重新尝试运行本程序，如果出现与此相同的提示，请联系软件作者！", "疯掉了~~", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("[CU]\r\n非常抱歉，程序非正常结束，请重新尝试运行本程序，如果出现与此相同的提示，请联系软件作者！", "疯掉了~~", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();    
         }
        

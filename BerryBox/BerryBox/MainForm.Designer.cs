@@ -121,7 +121,6 @@
             this.linkLabelHomeWeb = new System.Windows.Forms.LinkLabel();
             this.labelBerryBoxTitle = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tbCodLoaderLog = new System.Windows.Forms.TextBox();
             this.dialogBrowserCodFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
@@ -142,6 +141,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.rtb_LogBox = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
             this.tabCodLoader.SuspendLayout();
             this.panel_CodLoader.SuspendLayout();
@@ -1166,18 +1166,6 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
-            // tbCodLoaderLog
-            // 
-            this.tbCodLoaderLog.BackColor = System.Drawing.SystemColors.Window;
-            this.tbCodLoaderLog.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tbCodLoaderLog.Location = new System.Drawing.Point(0, 22);
-            this.tbCodLoaderLog.Multiline = true;
-            this.tbCodLoaderLog.Name = "tbCodLoaderLog";
-            this.tbCodLoaderLog.ReadOnly = true;
-            this.tbCodLoaderLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbCodLoaderLog.Size = new System.Drawing.Size(592, 109);
-            this.tbCodLoaderLog.TabIndex = 2;
-            // 
             // dialogBrowserCodFolder
             // 
             this.dialogBrowserCodFolder.ShowNewFolderButton = false;
@@ -1371,13 +1359,22 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.rtb_LogBox);
             this.panel2.Controls.Add(this.label7);
-            this.panel2.Controls.Add(this.tbCodLoaderLog);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(0, 420);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(592, 131);
             this.panel2.TabIndex = 9;
+            // 
+            // rtb_LogBox
+            // 
+            this.rtb_LogBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.rtb_LogBox.Location = new System.Drawing.Point(0, 22);
+            this.rtb_LogBox.Name = "rtb_LogBox";
+            this.rtb_LogBox.Size = new System.Drawing.Size(592, 109);
+            this.rtb_LogBox.TabIndex = 5;
+            this.rtb_LogBox.Text = "";
             // 
             // MainForm
             // 
@@ -1459,7 +1456,6 @@
         private System.Windows.Forms.TextBox tbSoftName;
         private System.Windows.Forms.Button btnBuildJad;
         private System.Windows.Forms.TabPage tabCodLoader;
-        private System.Windows.Forms.TextBox tbCodLoaderLog;
         private System.Windows.Forms.ListView lvCodLoaderFiles;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
@@ -1552,6 +1548,7 @@
         private System.Windows.Forms.Button btn_Jar2Cod_Select_RAPC;
         private System.Windows.Forms.TextBox tb_Jar2Cod_RAPC;
         private System.Windows.Forms.Button btn_JAD_BuildAlx;
+        private System.Windows.Forms.RichTextBox rtb_LogBox;
     }
 }
 
