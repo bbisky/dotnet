@@ -102,6 +102,9 @@
             this.label17 = new System.Windows.Forms.Label();
             this.btn_OTA_Download = new System.Windows.Forms.Button();
             this.tb_OTA_URL = new System.Windows.Forms.TextBox();
+            this.tabJar2Cod = new System.Windows.Forms.TabPage();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.tb_Jar2Cod_JarFiles = new System.Windows.Forms.TextBox();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
@@ -114,6 +117,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusLabelLeft = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btn_Global_InstallDriver = new System.Windows.Forms.Button();
             this.label_Global_OS = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label_Global_Status = new System.Windows.Forms.Label();
@@ -129,7 +133,15 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.btn_Global_InstallDriver = new System.Windows.Forms.Button();
+            this.tb_Jar2Cod_RAPC = new System.Windows.Forms.TextBox();
+            this.btn_Jar2Cod_Select_RAPC = new System.Windows.Forms.Button();
+            this.label22 = new System.Windows.Forms.Label();
+            this.tb_Jar2Cod_RIMAPI = new System.Windows.Forms.TextBox();
+            this.btn_Jar2Cod_Select_RIMAPI = new System.Windows.Forms.Button();
+            this.label23 = new System.Windows.Forms.Label();
+            this.btn_Jar2Cod_Convert = new System.Windows.Forms.Button();
+            this.groupBox_Jar2Cod_Settings = new System.Windows.Forms.GroupBox();
+            this.btn_JAD_BuildAlx = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabCodLoader.SuspendLayout();
             this.panel_CodLoader.SuspendLayout();
@@ -148,12 +160,15 @@
             this.groupBox7.SuspendLayout();
             this.tabOTADownloader.SuspendLayout();
             this.groupBox_OTA.SuspendLayout();
+            this.tabJar2Cod.SuspendLayout();
+            this.groupBox11.SuspendLayout();
             this.tabAbout.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.groupBox_Jar2Cod_Settings.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -162,6 +177,7 @@
             this.tabControl1.Controls.Add(this.tabJadCreator);
             this.tabControl1.Controls.Add(this.tabSysTools);
             this.tabControl1.Controls.Add(this.tabOTADownloader);
+            this.tabControl1.Controls.Add(this.tabJar2Cod);
             this.tabControl1.Controls.Add(this.tabAbout);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 82);
@@ -169,6 +185,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(592, 338);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabCodLoader
             // 
@@ -355,6 +372,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btn_JAD_BuildAlx);
             this.groupBox2.Controls.Add(this.btnBuildJad);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.tbSoftVendor);
@@ -374,7 +392,7 @@
             // btnBuildJad
             // 
             this.btnBuildJad.Enabled = false;
-            this.btnBuildJad.Location = new System.Drawing.Point(114, 250);
+            this.btnBuildJad.Location = new System.Drawing.Point(72, 250);
             this.btnBuildJad.Name = "btnBuildJad";
             this.btnBuildJad.Size = new System.Drawing.Size(69, 23);
             this.btnBuildJad.TabIndex = 2;
@@ -743,7 +761,7 @@
             // 
             // tabOTADownloader
             // 
-            this.tabOTADownloader.BackColor = System.Drawing.SystemColors.Control;
+            this.tabOTADownloader.BackColor = System.Drawing.Color.Transparent;
             this.tabOTADownloader.Controls.Add(this.tb_OTA_CodFiles);
             this.tabOTADownloader.Controls.Add(this.progressBar_OTA);
             this.tabOTADownloader.Controls.Add(this.groupBox_OTA);
@@ -752,6 +770,7 @@
             this.tabOTADownloader.Size = new System.Drawing.Size(584, 312);
             this.tabOTADownloader.TabIndex = 4;
             this.tabOTADownloader.Text = "OTA下载";
+            this.tabOTADownloader.UseVisualStyleBackColor = true;
             // 
             // tb_OTA_CodFiles
             // 
@@ -937,6 +956,44 @@
             this.tb_OTA_URL.Size = new System.Drawing.Size(386, 21);
             this.tb_OTA_URL.TabIndex = 0;
             // 
+            // tabJar2Cod
+            // 
+            this.tabJar2Cod.BackColor = System.Drawing.Color.Transparent;
+            this.tabJar2Cod.Controls.Add(this.groupBox11);
+            this.tabJar2Cod.Controls.Add(this.groupBox_Jar2Cod_Settings);
+            this.tabJar2Cod.Location = new System.Drawing.Point(4, 22);
+            this.tabJar2Cod.Name = "tabJar2Cod";
+            this.tabJar2Cod.Padding = new System.Windows.Forms.Padding(3);
+            this.tabJar2Cod.Size = new System.Drawing.Size(584, 312);
+            this.tabJar2Cod.TabIndex = 5;
+            this.tabJar2Cod.Text = "Jar2Cod";
+            this.tabJar2Cod.UseVisualStyleBackColor = true;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.tb_Jar2Cod_JarFiles);
+            this.groupBox11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox11.Location = new System.Drawing.Point(3, 103);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(578, 206);
+            this.groupBox11.TabIndex = 1;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Jar文件";
+            // 
+            // tb_Jar2Cod_JarFiles
+            // 
+            this.tb_Jar2Cod_JarFiles.AllowDrop = true;
+            this.tb_Jar2Cod_JarFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tb_Jar2Cod_JarFiles.Location = new System.Drawing.Point(3, 17);
+            this.tb_Jar2Cod_JarFiles.Multiline = true;
+            this.tb_Jar2Cod_JarFiles.Name = "tb_Jar2Cod_JarFiles";
+            this.tb_Jar2Cod_JarFiles.ReadOnly = true;
+            this.tb_Jar2Cod_JarFiles.Size = new System.Drawing.Size(572, 186);
+            this.tb_Jar2Cod_JarFiles.TabIndex = 1;
+            this.tb_Jar2Cod_JarFiles.Text = "拖放目录或jar文件至此";
+            this.tb_Jar2Cod_JarFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.tb_Jar2Cod_JarFiles_DragDrop);
+            this.tb_Jar2Cod_JarFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.tb_Jar2Cod_JarFiles_DragEnter);
+            // 
             // tabAbout
             // 
             this.tabAbout.BackColor = System.Drawing.Color.Transparent;
@@ -1068,6 +1125,16 @@
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "设备信息";
+            // 
+            // btn_Global_InstallDriver
+            // 
+            this.btn_Global_InstallDriver.Location = new System.Drawing.Point(461, 12);
+            this.btn_Global_InstallDriver.Name = "btn_Global_InstallDriver";
+            this.btn_Global_InstallDriver.Size = new System.Drawing.Size(98, 23);
+            this.btn_Global_InstallDriver.TabIndex = 13;
+            this.btn_Global_InstallDriver.Text = "加载USB驱动";
+            this.btn_Global_InstallDriver.UseVisualStyleBackColor = true;
+            this.btn_Global_InstallDriver.Click += new System.EventHandler(this.btn_Global_InstallDriver_Click);
             // 
             // label_Global_OS
             // 
@@ -1215,15 +1282,102 @@
             this.panel2.Size = new System.Drawing.Size(592, 131);
             this.panel2.TabIndex = 9;
             // 
-            // btn_Global_InstallDriver
+            // tb_Jar2Cod_RAPC
             // 
-            this.btn_Global_InstallDriver.Location = new System.Drawing.Point(461, 12);
-            this.btn_Global_InstallDriver.Name = "btn_Global_InstallDriver";
-            this.btn_Global_InstallDriver.Size = new System.Drawing.Size(98, 23);
-            this.btn_Global_InstallDriver.TabIndex = 13;
-            this.btn_Global_InstallDriver.Text = "加载USB驱动";
-            this.btn_Global_InstallDriver.UseVisualStyleBackColor = true;
-            this.btn_Global_InstallDriver.Click += new System.EventHandler(this.btn_Global_InstallDriver_Click);
+            this.tb_Jar2Cod_RAPC.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tb_Jar2Cod_RAPC.Location = new System.Drawing.Point(125, 29);
+            this.tb_Jar2Cod_RAPC.Name = "tb_Jar2Cod_RAPC";
+            this.tb_Jar2Cod_RAPC.ReadOnly = true;
+            this.tb_Jar2Cod_RAPC.Size = new System.Drawing.Size(302, 21);
+            this.tb_Jar2Cod_RAPC.TabIndex = 31;
+            this.tb_Jar2Cod_RAPC.TextChanged += new System.EventHandler(this.tb_Jar2Cod_RAPC_TextChanged);
+            // 
+            // btn_Jar2Cod_Select_RAPC
+            // 
+            this.btn_Jar2Cod_Select_RAPC.Location = new System.Drawing.Point(431, 28);
+            this.btn_Jar2Cod_Select_RAPC.Name = "btn_Jar2Cod_Select_RAPC";
+            this.btn_Jar2Cod_Select_RAPC.Size = new System.Drawing.Size(39, 23);
+            this.btn_Jar2Cod_Select_RAPC.TabIndex = 32;
+            this.btn_Jar2Cod_Select_RAPC.Text = "...";
+            this.btn_Jar2Cod_Select_RAPC.UseVisualStyleBackColor = true;
+            this.btn_Jar2Cod_Select_RAPC.Click += new System.EventHandler(this.btn_Jar2Cod_Select_RAPC_Click);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(54, 33);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(65, 12);
+            this.label22.TabIndex = 33;
+            this.label22.Text = "rapc.exe：";
+            // 
+            // tb_Jar2Cod_RIMAPI
+            // 
+            this.tb_Jar2Cod_RIMAPI.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tb_Jar2Cod_RIMAPI.Location = new System.Drawing.Point(125, 56);
+            this.tb_Jar2Cod_RIMAPI.Name = "tb_Jar2Cod_RIMAPI";
+            this.tb_Jar2Cod_RIMAPI.ReadOnly = true;
+            this.tb_Jar2Cod_RIMAPI.Size = new System.Drawing.Size(302, 21);
+            this.tb_Jar2Cod_RIMAPI.TabIndex = 34;
+            this.tb_Jar2Cod_RIMAPI.TextChanged += new System.EventHandler(this.tb_Jar2Cod_RIMAPI_TextChanged);
+            // 
+            // btn_Jar2Cod_Select_RIMAPI
+            // 
+            this.btn_Jar2Cod_Select_RIMAPI.Location = new System.Drawing.Point(431, 55);
+            this.btn_Jar2Cod_Select_RIMAPI.Name = "btn_Jar2Cod_Select_RIMAPI";
+            this.btn_Jar2Cod_Select_RIMAPI.Size = new System.Drawing.Size(39, 23);
+            this.btn_Jar2Cod_Select_RIMAPI.TabIndex = 35;
+            this.btn_Jar2Cod_Select_RIMAPI.Text = "...";
+            this.btn_Jar2Cod_Select_RIMAPI.UseVisualStyleBackColor = true;
+            this.btn_Jar2Cod_Select_RIMAPI.Click += new System.EventHandler(this.btn_Jar2Cod_Select_RIMAPI_Click);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(12, 60);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(107, 12);
+            this.label23.TabIndex = 36;
+            this.label23.Text = "net_rim_api.jar：";
+            // 
+            // btn_Jar2Cod_Convert
+            // 
+            this.btn_Jar2Cod_Convert.Enabled = false;
+            this.btn_Jar2Cod_Convert.Location = new System.Drawing.Point(488, 28);
+            this.btn_Jar2Cod_Convert.Name = "btn_Jar2Cod_Convert";
+            this.btn_Jar2Cod_Convert.Size = new System.Drawing.Size(75, 50);
+            this.btn_Jar2Cod_Convert.TabIndex = 37;
+            this.btn_Jar2Cod_Convert.Text = "开始转换";
+            this.btn_Jar2Cod_Convert.UseVisualStyleBackColor = true;
+            this.btn_Jar2Cod_Convert.Click += new System.EventHandler(this.btn_Jar2Cod_Convert_Click);
+            // 
+            // groupBox_Jar2Cod_Settings
+            // 
+            this.groupBox_Jar2Cod_Settings.Controls.Add(this.btn_Jar2Cod_Convert);
+            this.groupBox_Jar2Cod_Settings.Controls.Add(this.label23);
+            this.groupBox_Jar2Cod_Settings.Controls.Add(this.btn_Jar2Cod_Select_RIMAPI);
+            this.groupBox_Jar2Cod_Settings.Controls.Add(this.tb_Jar2Cod_RIMAPI);
+            this.groupBox_Jar2Cod_Settings.Controls.Add(this.label22);
+            this.groupBox_Jar2Cod_Settings.Controls.Add(this.btn_Jar2Cod_Select_RAPC);
+            this.groupBox_Jar2Cod_Settings.Controls.Add(this.tb_Jar2Cod_RAPC);
+            this.groupBox_Jar2Cod_Settings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox_Jar2Cod_Settings.Location = new System.Drawing.Point(3, 3);
+            this.groupBox_Jar2Cod_Settings.Name = "groupBox_Jar2Cod_Settings";
+            this.groupBox_Jar2Cod_Settings.Size = new System.Drawing.Size(578, 100);
+            this.groupBox_Jar2Cod_Settings.TabIndex = 0;
+            this.groupBox_Jar2Cod_Settings.TabStop = false;
+            this.groupBox_Jar2Cod_Settings.Text = "设置";
+            // 
+            // btn_JAD_BuildAlx
+            // 
+            this.btn_JAD_BuildAlx.Enabled = false;
+            this.btn_JAD_BuildAlx.Location = new System.Drawing.Point(157, 250);
+            this.btn_JAD_BuildAlx.Name = "btn_JAD_BuildAlx";
+            this.btn_JAD_BuildAlx.Size = new System.Drawing.Size(69, 23);
+            this.btn_JAD_BuildAlx.TabIndex = 10;
+            this.btn_JAD_BuildAlx.Text = "生成ALX";
+            this.btn_JAD_BuildAlx.UseVisualStyleBackColor = true;
+            this.btn_JAD_BuildAlx.Click += new System.EventHandler(this.btn_JAD_BuildAlx_Click);
             // 
             // MainForm
             // 
@@ -1263,6 +1417,9 @@
             this.tabOTADownloader.PerformLayout();
             this.groupBox_OTA.ResumeLayout(false);
             this.groupBox_OTA.PerformLayout();
+            this.tabJar2Cod.ResumeLayout(false);
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
             this.tabAbout.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -1273,6 +1430,8 @@
             this.groupBox5.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.groupBox_Jar2Cod_Settings.ResumeLayout(false);
+            this.groupBox_Jar2Cod_Settings.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1381,6 +1540,18 @@
         private System.Windows.Forms.Button btn_OTA_BrowseSaveFolder;
         private System.Windows.Forms.LinkLabel link_OTA_Help;
         private System.Windows.Forms.Button btn_Global_InstallDriver;
+        private System.Windows.Forms.TabPage tabJar2Cod;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.TextBox tb_Jar2Cod_JarFiles;
+        private System.Windows.Forms.GroupBox groupBox_Jar2Cod_Settings;
+        private System.Windows.Forms.Button btn_Jar2Cod_Convert;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button btn_Jar2Cod_Select_RIMAPI;
+        private System.Windows.Forms.TextBox tb_Jar2Cod_RIMAPI;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Button btn_Jar2Cod_Select_RAPC;
+        private System.Windows.Forms.TextBox tb_Jar2Cod_RAPC;
+        private System.Windows.Forms.Button btn_JAD_BuildAlx;
     }
 }
 

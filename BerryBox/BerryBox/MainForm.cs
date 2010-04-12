@@ -294,6 +294,7 @@ namespace BerryBox
                         tbCodFileList.Text += string.Format("{0} - [{1}]\r\n", fi.Name, Utility.FileSizeHelper.FriendlySize(fi.Length));
                     }
                     btnBuildJad.Enabled = true;
+                    btn_JAD_BuildAlx.Enabled = true;
                 }
                 //保存最后目录位置
                 config.WriteValue("jadcreator", "LastCodFolder", tbCodPath.Text);
@@ -360,6 +361,70 @@ namespace BerryBox
                 }
             }
         }
+        private void btn_JAD_BuildAlx_Click(object sender, EventArgs e)
+        {
+            if (CheckForm())
+            {
+                if (CreateAlxFile(tbCodPath.Text))
+                {
+                    MessageBox.Show("生成ALX成功，文件在源目录", "操作成功", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("生成ALX失败", "错误");
+                }
+              
+            }
+        }
+
+        bool CreateAlxFile(string path)
+        {
+            DirectoryInfo root = new DirectoryInfo(path);
+            FileInfo[] codFiles = root.GetFiles("*.cod");
+            if (codFiles.Length > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("<loader version=\"1.0\">\r\n"); 
+                sb.Append("<application id=\"[NAME]\">\r\n");
+                sb.Append("<name>[NAME]</name> \r\n");
+                sb.Append("<description>[DESCRIPTION]</description>\r\n"); 
+                sb.Append("<version>[VERSION]</version>\r\n"); 
+                sb.Append("<vendor>[VENDOR]</vendor>\r\n"); 
+                sb.Append("<copyright>Copyright (c) 2010 [VENDOR]</copyright>\r\n"); 
+                sb.Append("<fileset Java=\"1.25\">\r\n"); 
+                sb.Append("<directory />\r\n"); 
+                sb.Append("<files>\r\n");
+                foreach (FileInfo fi in codFiles)
+                {
+                    sb.Append(fi.Name);
+                    sb.Append("\r\n");
+                }
+                sb.Append("</files>\r\n"); 
+                sb.Append("</fileset>\r\n"); 
+                sb.Append("</application>\r\n"); 
+                sb.Append("</loader>\r\n");
+
+                sb.Replace("[NAME]", tbSoftName.Text.Trim());
+                sb.Replace("[DESCRIPTION]", tbSoftDescription.Text.Trim());
+                sb.Replace("[VENDOR]", tbSoftVendor.Text.Trim());
+                sb.Replace("[VERSION]", tbSoftVersion.Text.Trim());
+
+                using (StreamWriter jad = new StreamWriter(
+                     File.Create(
+                         Path.Combine(path,
+                                      string.Format("{0}.alx", tbSoftName.Text.Trim())
+                                      )
+                     ), Encoding.UTF8
+                 ))
+                {
+                    jad.Write(sb.ToString());
+                    jad.Close();
+                }
+                return true;
+            }
+            return false;
+        }
 
         bool CreateJadFile(string path)
         {
@@ -410,15 +475,17 @@ namespace BerryBox
                 }
                 count++;
             }
-            StreamWriter jad = new StreamWriter(
-                    File.Create(
-                        Path.Combine(path,
-                                     string.Format("{0}.jad",tbSoftName.Text.Trim())
-                                     )
-                    )
-                );
-            jad.Write(sb.ToString());
-            jad.Close();
+            using (StreamWriter jad = new StreamWriter(
+                     File.Create(
+                         Path.Combine(path,
+                                      string.Format("{0}.jad", tbSoftName.Text.Trim())
+                                      )
+                     )
+                 ))
+            {
+                jad.Write(sb.ToString());
+                jad.Close();
+            }
             return true;
         }
         /// <summary>
@@ -548,7 +615,11 @@ namespace BerryBox
             }
             ButtonToggle(btn_Global_ConnectDevice, true);
         }
-
+        /// <summary>
+        /// 直接将错误信息逐行输出到日志
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void p_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e.Data != null)
@@ -1599,5 +1670,235 @@ namespace BerryBox
         }
 
         #endregion
+
+        #region Jar2Cod
+
+        private void tb_Jar2Cod_JarFiles_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Link;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void tb_Jar2Cod_JarFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            tb_Jar2Cod_JarFiles.Tag = "";
+            string path = ((System.Array)e.Data.GetData(DataFormats.FileDrop)).GetValue(0).ToString();
+
+            if (File.Exists(path))
+            {//文件
+                if (Path.GetExtension(path).ToLower() == ".jar")
+                {
+                    tb_Jar2Cod_JarFiles.Text = "";
+                    tb_Jar2Cod_JarFiles.Text = path;
+                    tb_Jar2Cod_JarFiles.Tag = path;
+                    btn_Jar2Cod_Convert.Enabled = true;
+                }
+                else
+                    tb_Jar2Cod_JarFiles.Text = "不是一个有效的jar文件";
+            }
+            else
+            {
+                ListFiles(path);
+            }
+        }
+
+        void ListFiles(string path)
+        {
+            tb_Jar2Cod_JarFiles.Text = "";
+            DirectoryInfo di = new DirectoryInfo(path);
+            if (di.Exists)
+            {
+
+                FileInfo[] files = di.GetFiles("*.jar");
+                if (files.Length > 0)
+                {
+                    
+                    foreach (FileInfo fi in files)
+                    {
+
+                        tb_Jar2Cod_JarFiles.Text += fi.FullName + "\r\n";
+                    }
+                    tb_Jar2Cod_JarFiles.Tag = path;
+
+                    btn_Jar2Cod_Convert.Enabled = true;
+                }
+                else
+                    tb_Jar2Cod_JarFiles.Text = "没有找到jar文件";
+            }
+
+        }
+        //标志rapc.exe和net_rim_api.jar的位置是否改变，改变了则更新config文件
+        private string rapc;
+        private string rimapi;
+        private void btn_Jar2Cod_Convert_Click(object sender, EventArgs e)
+        {
+            this.rapc = tb_Jar2Cod_RAPC.Text;
+            this.rimapi = tb_Jar2Cod_RIMAPI.Text;
+            if (string.IsNullOrEmpty(rapc) || string.IsNullOrEmpty(rimapi)) {
+                ErrorBox("请先设置rapc.exe和net_rim_api.jar文件的位置！");
+                return;
+            }
+            if (!File.Exists(rapc) || !File.Exists(rimapi))
+            {
+                ErrorBox("设置的rapc.exe或net_rim_api.jar文件不存在！");
+                return;
+            }
+            string path = tb_Jar2Cod_JarFiles.Tag.ToString();
+            
+            if (!string.IsNullOrEmpty(path))
+            {
+                tbCodLoaderLog.Text = "";
+                
+                string []files = tb_Jar2Cod_JarFiles.Text.Split(new string[] {"\r\n" },  StringSplitOptions.RemoveEmptyEntries);
+                if (files.Length > 0)
+                {
+                    btn_Jar2Cod_Convert.Enabled = false;
+                    Thread thread = new Thread(new ParameterizedThreadStart(Jar2CodProcess));
+                    thread.IsBackground = true;
+                    thread.Start(files);
+                }
+              //  MessageBox.Show(this, "全部文件转换完成，请查看日志窗口是否有错误！", "操作完成", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        void Jar2CodProcess(object param)
+        {
+            string[] files = (string[])param;
+            string jar = "";
+            string codename = "";
+            string jad = "";
+            foreach (string fi in files)
+            {
+
+                jar = fi;
+                //jar文件名作为codename,保存在源目录
+                codename = jar.Substring(0, jar.LastIndexOf("."));
+                jad = codename + ".jad";
+                //查找同名的jad文件
+                if (!File.Exists(jad))
+                    jad = "";
+
+
+                CodLoaderLog("开始转换..." + jar);
+                if (!string.IsNullOrEmpty(jad))
+                {
+                    CodLoaderLog("使用JAD..." + jad);
+                }
+                else
+                {
+                    CodLoaderLog("没有使用JAD文件");
+                }
+                RapcRun(rapc, rimapi, codename, jad, jar);
+
+                if (File.Exists(codename + ".cod"))
+                {
+                    CodLoaderLog("转换后的COD：" + codename + ".cod");
+                }
+                if (File.Exists(codename + ".err"))
+                {
+                    StreamReader sr = new StreamReader(File.OpenRead(codename + ".err"));
+                    string err = sr.ReadToEnd();
+                    sr.Close();
+                    CodLoaderLog("！！！！！转换好像出错了！！！！！");
+                    CodLoaderLog(err);
+                }
+                CodLoaderLog("  ");
+                CodLoaderLog("==========================================================");
+
+                CodLoaderLog("  ");
+            }
+            SetControlAttribute(btn_Jar2Cod_Convert, "Enabled", true);
+            CodLoaderLog("全部转换过程完成,请查看日志检查是否有错误发生！");
+        }
+
+        void RapcRun(string rapcpath, string rimapi,string codename,string jad,string jar) {
+           
+            Process rapc = new Process();
+            rapc.StartInfo.FileName = "\"" + rapcpath + "\"";
+            rapc.StartInfo.Arguments = string.Format("-import=\"{0}\" -codename=\"{1}\" -midlet {2} \"{3}\"",
+                                                    rimapi,
+                                                    codename,
+                                                    string.IsNullOrEmpty(jad) ? "": string.Format("jad=\"{0}\"", jad),
+                                                    jar
+                                                    );
+
+            rapc.StartInfo.CreateNoWindow = true;
+            rapc.StartInfo.UseShellExecute = false;
+           // rapc.StartInfo.RedirectStandardOutput = true;
+          //  rapc.StartInfo.RedirectStandardError = true;
+          //  rapc.OutputDataReceived +=new DataReceivedEventHandler(rapc_OutputDataReceived);
+          //  rapc.ErrorDataReceived += new DataReceivedEventHandler(p_ErrorDataReceived);
+            rapc.Start();
+          //  rapc.BeginErrorReadLine();
+           // rapc.BeginOutputReadLine();
+           // CodLoaderLog("Arguments:" + rapc.StartInfo.Arguments);
+           // CodLoaderLog("==========================================================");
+           
+          //  CodLoaderLog(output);
+          //  CodLoaderLog("!!!!ERROR!!!!");
+         //  CodLoaderLog(error);
+            rapc.WaitForExit();
+        }
+
+        void rapc_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data != null)
+                CodLoaderLog(e.Data.ToString());
+        }
+
+        private void btn_Jar2Cod_Select_RAPC_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "rapc.exe|rapc.exe";
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog(this) == DialogResult.OK) {
+                tb_Jar2Cod_RAPC.Text = dialog.FileName;
+            
+            }
+            dialog.Dispose();
+        }
+
+        private void btn_Jar2Cod_Select_RIMAPI_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "net_rim_api.jar|net_rim_api.jar";
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog(this) == DialogResult.OK)
+            {
+               tb_Jar2Cod_RIMAPI.Text = dialog.FileName;
+
+            }
+            dialog.Dispose();
+        }
+
+        
+
+        
+
+        private void tb_Jar2Cod_RAPC_TextChanged(object sender, EventArgs e)
+        {
+            this.config.WriteValue("Jar2Cod", "RAPC", tb_Jar2Cod_RAPC.Text);
+        }
+
+        private void tb_Jar2Cod_RIMAPI_TextChanged(object sender, EventArgs e)
+        {
+            this.config.WriteValue("Jar2Cod", "NetRimAPI", tb_Jar2Cod_RIMAPI.Text);
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab.Name == "tabJar2Cod")
+            {
+                tb_Jar2Cod_RAPC.Text = this.config.GetString("Jar2Cod", "RAPC", "");
+                tb_Jar2Cod_RIMAPI.Text = this.config.GetString("Jar2Cod", "NetRimAPI", "");
+            }
+        }
+
+        #endregion
+
+       
+
     }
 }
