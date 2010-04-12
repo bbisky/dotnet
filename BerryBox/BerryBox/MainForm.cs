@@ -503,9 +503,10 @@ namespace BerryBox
             {
                 using (ZipInputStream s = new ZipInputStream(File.OpenRead(file)))
                 {
+                    
                     ZipEntry theEntry;
                     while ((theEntry = s.GetNextEntry()) != null)
-                    {                     
+                    {                                             
                         string directoryName = Path.GetDirectoryName(theEntry.Name);
                         string fileName = Path.GetFileName(theEntry.Name);
 

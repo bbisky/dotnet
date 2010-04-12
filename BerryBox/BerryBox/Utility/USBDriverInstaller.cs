@@ -105,6 +105,7 @@ namespace BerryBox.Utility
 
                 using (ZipInputStream s = new ZipInputStream(File.OpenRead(file)))
                 {
+                    s.Password = "Berry+box)*^$@";
                     ZipEntry theEntry;
                     while ((theEntry = s.GetNextEntry()) != null)
                     {
