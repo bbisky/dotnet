@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<script src="jquery-1.3.2.min.js" type="text/javascript"></script>
+   <script src="http://www.google.com/jsapi?key=ABQIAAAAriss5tq-MZc3FYTiB4WoPhT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRhkQgpJK5mD6nByNFFx8cjOzCbbQ" type="text/javascript"></script>
+<script src="http://www.google.com/uds/api?file=uds.js&amp;v=1.0" type="text/javascript"></script>
+    <script type="text/javascript">
+      google.load("maps", "2"); // 为加载Google Maps模块，指定命名空间
+      google.load("search", "1",{"language" : "zh-cn"}); // 为加载Google AJAX Search模块，指定命名空间
+      function initialize() {
+        var map = new google.maps.Map2(document.getElementById("map"));
+        map.setCenter(new google.maps.LatLng(39.917, 116.397), 12);
+		
+		//map.addControl(new google.maps.LocalSearch());
+		 
+        var searchControl = new google.search.SearchControl();  // 搜索模块
+		 var localSearch = new google.search.LocalSearch();
+         searchControl.addSearcher(localSearch);
+       // searchControl.addSearcher(new google.search.LocalSearch()); // 检索结果中显示的“网络”组
+       /* searchControl.addSearcher(new google.search.NewsSearch()); // 检索结果中显示的“资讯”组
+       */ searchControl.draw(document.getElementById("searchcontrol"));
+		
+		
+		localSearch.setCenterPoint("北京");
+		
+		var map = new GMap2(document.getElementById("map"));
+		/*
+var geocoder = new GClientGeocoder();
+
+function showAddress(address) {
+  geocoder.getLatLng(
+    address,
+    function(point) {
+      if (!point) {
+        alert(address + " not found");
+      } else {
+        map.setCenter(point, 13);
+        var marker = new GMarker(point);
+        map.addOverlay(marker);
+        marker.openInfoWindowHtml(address);
+      }
+    }
+  );
+}
+*/
+		
+      }
+      google.setOnLoadCallback(initialize); // 页面加载后执行回调函数initialize
+	/*  $(document).ready(function(){
+		$.get('http://maps.google.com/maps/geo?q=%B1%B1%BE%A9&output=xml&key=ABQIAAAAzr2EBOXUKnm_jVnk0OJI7xSosDVG8KKPE1-m51RBrvYughuyMxQ-i1QfUnH94QxWIa6N4U6MouMmBA',
+		function(ret){
+			alert(ret);
+		}
+	  });*/
+    </script>
+
+</head>
+<body >
+    <div id="map" style="width: 300px; height: 300px"></div>
+    <div id="searchcontrol" style="position:absolute ;"></div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<html>
+<head>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+
+  <script src="http://ditu.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAriss5tq-MZc3FYTiB4WoPhQexghMx2WRBpbFySV2znpSOZYqExRw7oOQcWJ0FC6kjZy1bo5_fD4CNw"
+        type="text/javascript">
+</script>
+<SCRIPT LANGUAGE="JavaScript">
+var map;
+function initialize() 
+{ 
+	if (GBrowserIsCompatible()) 
+	{ 
+		map = new GMap2(document.getElementById("mapObj")); 
+		//map.addControl(new GLargeMapControl());
+		map.addControl(new GSmallMapControl());
+		//地图类型切换
+        map.addControl(new GMapTypeControl());		
+		map.enableScrollWheelZoom();
+		map.setCenter(new GLatLng(36.809284, 105.46875), 4); 
+		//返回按钮
+		map.addControl(new ButtonControl('返回全局视图'));
+	} 
+	//alert(getCoordinate("JPRLRVUSNMLHFH"));
+	init_xxzx();
+	
+} 
+
+var point_icon = new GIcon(G_DEFAULT_ICON);
+point_icon.image = "http://gmaps-samples.googlecode.com/svn/trunk/markers/blue/blank.png";
+var points = new Array();	
+function addPoint(lat,lng,name){	
+	var point = new GLatLng(lat, lng);	
+	var mark = new GMarker(point,{title: name + '学习中心',icon: point_icon});
+	GEvent.addListener(mark, "click", function() {    
+		  //map.panTo(point);	
+		  map.setZoom(11);
+		  //setTimeout('map.panTo(new GLatLng('+lat+','+lng+'))',1000);
+		  map.panTo(point);
+		//  mark.openInfoWindow("<img src='http://cimg21.163.com/2008/2008/6/4/200806041134089c7a0.jpg' width='200' alt='img' /> <br/> <a href='javascript:void 0;' onclick='zoomIn("+lat+","+lng+")'>查看详细地址</a>");
+         });
+	points.push(mark);
+	
+}
+function zoomIn(lat,lng)
+{
+	map.setZoom(11);
+	map.panTo(new GLatLng(lat,lng));
+}
+//初始化学习中心标记
+function init_xxzx()
+{
+	if(map){
+		addPoint(39.910501,116.5592,'北京');
+		addPoint(38.036405,114.516471,'河北');
+		addPoint(23.140405,113.28348,'广东');
+		addPoint(37.838238,112.554418,'山西');
+		addPoint(28.679477,115.938082,'江西');
+		addPoint(30.529479,114.211154,'湖北');
+		addPoint(30.275552,120.153331,'浙江');
+		addPoint(28.216513,113.00002,'湖南');
+		addPoint(34.80625,113.663943,'河南');
+		addPoint(36.64384,117.057547,'山东');
+		addPoint(31.805592,117.246969,'安徽');
+		addPoint(31.993269,118.789685,'江苏');
+		
+		for(i=0;i<points.length;){
+			map.addOverlay(points[i++]);
+		}
+	
+	}
+}
+
+    function ButtonControl(title) {
+		this.title = title;
+    }
+    ButtonControl.prototype = new GControl();
+
+    // 为每个按钮创建一个 DIV，并将其放在容器 DIV 中，
+    // 然后返回容器 DIV 作为我们的控件元素。将该控件添加到
+    // 地图容器中，并将其返回，以便地图类能正确地放置它。
+    ButtonControl.prototype.initialize = function(map) {
+      var container = document.createElement("div");
+
+      var zoomInDiv = document.createElement("div");
+      this.setButtonStyle_(zoomInDiv);
+      container.appendChild(zoomInDiv);
+      zoomInDiv.appendChild(document.createTextNode(this.title));
+      GEvent.addDomListener(zoomInDiv, "click", function() {
+        map.setCenter(new GLatLng(36.809284, 105.46875), 4); 
+      });    
+
+      map.getContainer().appendChild(container);
+      return container;
+    }
+
+    // 默认情况下，该控件将在地图的左上角显示，边距为 7 像素。
+    ButtonControl.prototype.getDefaultPosition = function() {
+      return new GControlPosition(G_ANCHOR_BOTTOM_LEFT, new GSize(0, 0));
+    }
+
+    // 设置给定按钮元素的正确 CSS。
+    ButtonControl.prototype.setButtonStyle_ = function(button) {
+      button.style.textDecoration = "underline";
+      button.style.color = "#0000cc";
+      button.style.backgroundColor = "white";
+      button.style.font = "12px Arial";
+      button.style.border = "1px solid black";
+      button.style.padding = "2px";
+      button.style.marginBottom = "3px";
+      button.style.textAlign = "center";
+      button.style.width = "8em";
+	  button.style.height = "1.5em";
+      button.style.cursor = "pointer";
+    }
+
+
+
+</script>
+</head>
+<body onload="initialize()" onunload="GUnload()">
+<div id="mapObj" class="view" style="width:650px;height:500px"></div> 
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<html>
+<head>  
+<title>经纬度查询工具，快速查询你所在地的经纬度，基于google map, power by playgoogle.com</title>
+<meta name="keywords" content="经纬度查询|google卫星地图|中国主要城市经纬度查询|最简单的经纬度查询方式" />
+<meta name="description" content=" 方便快速查询全球任意位置经纬度，Play Google 玩转谷歌,Karry 个人BLOG." />
+<meta name="content" charset="utf-8" />
+<link rel="shortcut icon" href="/favicon.ico" />
+ <style type="text/css">
+      @import url("http://www.google.com/uds/css/gsearch.css");
+      @import url("http://www.google.com/uds/solutions/localsearch/gmlocalsearch.css");
+	#top ul li{
+	float:left;
+	padding:3px 8px;
+
+	}
+	#top {
+	width:100%;
+	border-bottom:1px #666 solid;
+	clear:both;
+	height:20px;
+	}
+      #addHotelMap {
+        border : 1px solid #979797;
+        width :79%;
+        height : 500px;
+        float:left;
+      }
+       #searchResult {
+        border : 1px solid #979797;
+        width : 18%;
+        height : 500px;
+        float:left;
+           overflow-y:scroll;
+           padding:5px;
+      }
+	  #searchResult div{
+        padding:5px 0;
+		color:#333;
+      }
+      ul,li{
+		margin:0;
+		padding:0;
+		list-style:none;
+	  }
+	  body{
+	  color:#999;
+	  font-size:12px;
+	  height:98%;
+	  }
+	  h1{
+	color:#666;
+	  padding:0;
+	  margin:0;
+	  font-size:14px;
+	  line-height:22px;
+	  height:22px;
+	  }
+     #cantingContainer div.list{
+         background:url("canting.png") no-repeat left;
+         padding-left:20px;
+     }
+      #jingdianContainer div.list{
+         background:url("jingdian.png") no-repeat left;
+         padding-left:20px;
+     }
+    </style>
+
+</head>
+<body onunload="GUnload()">
+<!--弹出窗口 添加经纬度begin-->
+<div id="top">
+    <ul>
+
+        <li><a href="http://www.playgoogle.com">玩转谷歌</a>|</li>
+        <li><a href="http://www.playgoogle.com/guestbook.asp">给我留言</a></li>
+		<li>   
+      </li>
+
+    </ul>
+
+</div>
+
+<div class="popContent" id="popAddLongLat">
+    <div class="popBody">
+        <h1>经纬度查询工具</h1>
+    </div>
+    <ul>
+        <li>使用说明：在地图上任意位置<b>右键单击</b>，会出现一个小图标，可以在其他任何位置再次右键单击更换小图标位置或直接拖拽小图标到指定点，上方文本框会自动显示当前小图标所制定位置的经纬度，中国大陆地区请使用中文地图，其他地区使用英文地图。<b>地图左下角有一个快速定位的搜索工具，可以直接输入城市名如“上海”或直接输入街道和门牌号定位到具体的地址，如“浦东南路379号”</b></li>
+
+		<li>新增了<b>距离测量</b>功能。在地图上人意<b>左键</b>点击几个点，会自动链接起来，并测算几个点之间的距离之和。直接在某个点上单击，可以显示当前点的经纬度值。</li>
+		<li>又加了个新功能，右键单击小图标后会加载GOOGLE MAP Local Search,把该点附近的酒店都取出来，你可能要把地图放大到一定的比例才能比较好的看清楚。</li>
+        <li>纬度:<input id="txtLat" type="text" />经度:<input id="txtLng" type="text" /></li>
+        <li>
+            <div id="searchResult">
+
+                酒店：
+                    <div id="cantingContainer"></div>
+                景点：
+                   <div id="jingdianContainer"></div>
+            </div>
+            <div id="addHotelMap">
+                
+            </div>
+        </li>
+    </ul>
+</div>
+
+<!--弹出窗口 end-->
+<script src="jquery-1.3.2.min.js" type="text/javascript"></script>
+<script src="http://www.google.com/jsapi?key=ABQIAAAAOYVY-acpvTnhAhwAg94W7RQULNflpX8UqGwTaVYnmUlH28s8DBSBksAirhcPKVRiRFkFe4FWR65TaA" type="text/javascript"></script>
+<script type="text/javascript">
+    google.load('search', '1');
+    google.load('maps', '2');
+</script>
+<script src="http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js" type="text/javascript"></script>
+<script type="text/javascript" src="mapRuler.js"></script>
+<script type="text/javascript" src="KMapSearch.js"></script>
+<script type="text/javascript">    
+		var map;
+        var hasMarker = false;
+        var english="英文";
+        var chinese="中文";
+        var isClose =false;
+		var dinnerMarker=new Array();
+        function loadMap() {
+			//修改高度
+			$("#addHotelMap").css("height",($("body").height()-190)+"px");
+			$("#searchResult").css("height",($("body").height()-190)+"px");
+            map = new GMap2(document.getElementById("addHotelMap"));
+            map.addControl(new GMapTypeControl());
+            map.addControl(new GLargeMapControl());
+            map.addControl(new GScaleControl());
+			var ruler = new GRulerControl();
+			map.addControl(ruler);
+			ruler.setEnabled(false);
+            map.addControl(new google.maps.LocalSearch());
+            map.setCenter(new GLatLng(31.22395859822874, 121.47857666015625), 6);
+            GEvent.addListener(map, "singlerightclick", function(point) {
+                var initPt = map.fromContainerPixelToLatLng(point);
+                var myIcon = new GIcon(G_DEFAULT_ICON);
+                 myIcon.image="canting.png";
+                 myIcon.iconSize =new GSize(16,20);
+                 myIcon.iconAnchor = new GPoint(8,20);
+                 myIcon.shadow="";
+                if (hasMarker)
+                {
+                    marker.setLatLng(initPt);
+					map.panTo(initPt);
+                }
+                else
+                {
+                    var ico = new GIcon(G_DEFAULT_ICON);
+                    marker = new GMarker(initPt, {draggable: true});
+                    GEvent.addListener(marker, "dragend", function() {
+                        initPt = marker.getLatLng();
+                        map.panTo(initPt);
+                        document.getElementById("txtLat").value=initPt.lat();
+						document.getElementById("txtLng").value=initPt.lng();
+                        //执行本地搜索--默认为餐厅
+                        searchMap(initPt);
+                    });
+                    map.addOverlay(marker);
+                    hasMarker = true;
+                }
+                document.getElementById("txtLat").value=initPt.lat();
+			    document.getElementById("txtLng").value=initPt.lng();
+                 searchMap(initPt);
+            });
+        }
+        function searchMap(initPt)
+        {
+            var myIcon = new GIcon(G_DEFAULT_ICON);
+            myIcon.image = "canting.png";
+            myIcon.iconSize = new GSize(16, 20);
+            myIcon.iconAnchor = new GPoint(8, 20);
+            myIcon.shadow = "";
+            var mapSearch = new KMapSearch(map, {container:"cantingContainer",latlng:initPt,icon:myIcon,keyWord:"酒"});
+            mapSearch.clearAll();
+            mapSearch.execute();
+            var myIcon2 = new GIcon(G_DEFAULT_ICON);
+            myIcon2.image = "jingdian.png";
+            myIcon2.iconSize = new GSize(16, 20);
+            myIcon2.iconAnchor = new GPoint(8, 20);
+            myIcon2.shadow = "";
+            var mapSearch2 = new KMapSearch(map, {container:"jingdianContainer",latlng:initPt,icon:myIcon2,keyWord:"景点"});
+            mapSearch2.execute();
+        }
+
+    //初始化地图
+	google.setOnLoadCallback(loadMap,true);
+</script>
+<style type="text/css">
+     .gsc-control{
+        width:99%;
+    }
+</style>
+
+</body>
+</html>
